@@ -1,0 +1,30 @@
+version: "3"
+services:
+  web:
+    build: .
+    ports:
+      - "80:8080"
+    environment:
+      - MONGODB_URI=mongodb://jirat:sukphalanon@cn466demo-mongodb-1:27017?retryWrites=true&w=majority
+      - LINE_CH_SECRET=965a9c66b8cc0fc5d153f08fe650a7e8
+      - LINE_ACCESS_TOKEN=3sWyAp+sPC0bZjrwsXnF6nPJ11nYJwIHN0MotJPv6yJzjKwq+skkR0B+YTWqDkmOxotWNvd6smnrUn4c0XpqW2+u1dffSpl3CMlDFSDbkHOGShXkhsjc/me5goyn1Bu1KGX2hpTEM/uwywuxHzByWwdB04t89/1O/w1cDnyilFU=
+      - NGROK_AUTH_TOKEN=2FBJ9y14TjN48kQMs0GZrm4AmJg_7HzEyZ6mTo2zFHFWvEL3s
+      - USER_ID=U750cd34f93c404939c44cab373418c6e
+      - map_api=d921919763b40c1570ec059d1b72ba46
+    depends_on:
+      - mosquitto
+      - mongodb
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
+  mongodb:
+    image: mongo
+    ports: 
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=jirat
+      - MONGO_INITDB_ROOT_PASSWORD=sukphalanon

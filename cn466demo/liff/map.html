@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MAP</title>
+        <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+        <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+        <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+        <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+        <style type="text/css">
+            html{
+              height:100%;
+            }
+            body{
+              margin:0px;
+              height:100%;
+            }
+            #map {
+              height: 100%;
+            }
+        </style>
+        <script> var apimap = process.env.map_api; </script>
+        <script type="text/javascript" src="https://api.longdo.com/map/?key=d921919763b40c1570ec059d1b72ba46"></script>
+        
+        <script>
+            var map;
+            /*
+            var buttonTh = longdo.MapTheme.ui.layerSelectorOption.th.button;
+            var buttonEn = longdo.MapTheme.ui.layerSelectorOption.en.button;
+            var layer1 = { label: 'OSM', value: longdo.Layers.OSM };
+            if (buttonTh.length > 2 && buttonEn.length > 2) {
+                buttonTh[2] = layer1;
+                buttonEn[2] = layer1;
+            }
+            var dropdown = longdo.MapTheme.ui.layerSelectorDropdown;
+            var layer2 = { label: 'คณะวิศวกรรมศาสตร์', value: longdo.Layers.OPENCYCLE };
+            dropdown.unshift(layer2);
+            //
+            */
+            var menuBarControl2 = new longdo.MenuBar({
+                button: [
+                { label: 'toggle', type: longdo.ButtonType.Toggle },
+                { label: 'push', type: longdo.ButtonType.Push },
+                { label: 'reset', type: longdo.ButtonType.Reset }],
+                dropdown: [
+                { label: 'คณะ', type: longdo.ButtonType.Group },
+                { label: 'คณะวิศวกรรมศาสตร์', value:1 },
+                { label: 'SIIT', value:2 },
+                { label: '<div style="padding: 8px; text-align: center;">custom<br />HTML</div>', type: longdo.ButtonType.Custom }],
+                dropdownLabel: 'more', change: menuChange 
+            });
+            var TagPanel1 = new longdo.TagPanel();
+            //var marker = new longdo.Marker({ lon: 100.605927, lat: 14.068910});
+            function init() {
+                map = new longdo.Map({
+                    placeholder: document.getElementById('map')
+                });
+                map.location(longdo.LocationMode.Geolocation);
+                //map.Overlays.add(marker);
+                map.Ui.add(TagPanel1);
+                map.Ui.add(menuBarControl2);
+            }
+            function menuChange(item) {
+                if(item.value==1){
+                    var marker1 = new longdo.Marker({ lon: 100.605927, lat: 14.068910});
+                }
+                else if (item.value==2){
+                    var marker1 = new longdo.Marker({ lon: 100.607492 , lat: 14.069043});
+                }
+                map.Overlays.add(marker1);
+            }
+        </script>
+
+        
+    </head>
+    <body onload="init();">
+        <div id="map"></div>
+    </body>
+
+</html>
