@@ -19,25 +19,26 @@
             #map {
               height: 100%;
             }
+            #result {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+            height: 80%;
+            margin: auto;
+            border: 4px solid #dddddd;
+            background: #ffffff;
+            overflow: auto;
+            z-index: 2;
+            }
         </style>
         <script> var apimap = process.env.map_api; </script>
         <script type="text/javascript" src="https://api.longdo.com/map/?key=d921919763b40c1570ec059d1b72ba46"></script>
         
         <script>
             var map;
-            /*
-            var buttonTh = longdo.MapTheme.ui.layerSelectorOption.th.button;
-            var buttonEn = longdo.MapTheme.ui.layerSelectorOption.en.button;
-            var layer1 = { label: 'OSM', value: longdo.Layers.OSM };
-            if (buttonTh.length > 2 && buttonEn.length > 2) {
-                buttonTh[2] = layer1;
-                buttonEn[2] = layer1;
-            }
-            var dropdown = longdo.MapTheme.ui.layerSelectorDropdown;
-            var layer2 = { label: 'คณะวิศวกรรมศาสตร์', value: longdo.Layers.OPENCYCLE };
-            dropdown.unshift(layer2);
-            //
-            */
+
             var menuBarControl2 = new longdo.MenuBar({
                 button: [
                 { label: 'toggle', type: longdo.ButtonType.Toggle },
@@ -47,8 +48,10 @@
                 { label: 'คณะ', type: longdo.ButtonType.Group },
                 { label: 'คณะวิศวกรรมศาสตร์', value:1 },
                 { label: 'SIIT', value:2 },
-                { label: '<div style="padding: 8px; text-align: center;">custom<br />HTML</div>', type: longdo.ButtonType.Custom }],
-                dropdownLabel: 'more', change: menuChange 
+                { label: 'คณะสหเวช', value:3 },
+                { label: 'คณะแพทย์', value:4 },
+                ],
+                dropdownLabel: 'เลือกคณะ', change: menuChange 
             });
             var TagPanel1 = new longdo.TagPanel();
             //var marker = new longdo.Marker({ lon: 100.605927, lat: 14.068910});
@@ -56,11 +59,26 @@
                 map = new longdo.Map({
                     placeholder: document.getElementById('map')
                 });
+                
                 map.location(longdo.LocationMode.Geolocation);
+                map.Layers.setBase(longdo.Layers.OSM);
                 //map.Overlays.add(marker);
+                map.Route.placeholder(document.getElementById('result'));
+                //var result = map.location(longdo.LocationMode.Geolocation);
+                var result = map.location();
+                map.Route.add(new longdo.Marker({ lon: result.lon,lat:result.lat}, //ตำแหน่งเรา
+                { 
+                    title: 'ฉันอยู่ที่นี่', 
+                    detail: 'I\'m here' 
+                }
+                ));
+                map.Route.add({ lon: 100.605927, lat: 14.068910 }); // ตำแหน่งที่จะไป
+                map.Route.search();
+            
                 map.Ui.add(TagPanel1);
                 map.Ui.add(menuBarControl2);
             }
+
             function menuChange(item) {
                 if(item.value==1){
                     var marker1 = new longdo.Marker({ lon: 100.605927, lat: 14.068910});
@@ -68,6 +86,7 @@
                 else if (item.value==2){
                     var marker1 = new longdo.Marker({ lon: 100.607492 , lat: 14.069043});
                 }
+                map.Overlays.clear();
                 map.Overlays.add(marker1);
             }
         </script>
@@ -76,6 +95,7 @@
     </head>
     <body onload="init();">
         <div id="map"></div>
+        <div id="result"></div>
     </body>
 
 </html>
