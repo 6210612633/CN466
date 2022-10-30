@@ -53,7 +53,7 @@
                 ],
                 dropdownLabel: 'เลือกคณะ', change: menuChange 
             });
-            var TagPanel1 = new longdo.TagPanel();
+
             //var marker = new longdo.Marker({ lon: 100.605927, lat: 14.068910});
             function init() {
                 map = new longdo.Map({
@@ -72,22 +72,23 @@
                     detail: 'I\'m here' 
                 }
                 ));
-                map.Route.add({ lon: 100.605927, lat: 14.068910 }); // ตำแหน่งที่จะไป
-                map.Route.search();
-            
-                map.Ui.add(TagPanel1);
+                //map.Route.add({ lon: 100.605927, lat: 14.068910 }); // ตำแหน่งที่จะไป
+                //map.Route.search();
                 map.Ui.add(menuBarControl2);
             }
 
             function menuChange(item) {
+
                 if(item.value==1){
                     var marker1 = new longdo.Marker({ lon: 100.605927, lat: 14.068910});
+                    map.Route.add({ lon: 100.605927, lat: 14.068910 }); // ตำแหน่งที่จะไป
                 }
                 else if (item.value==2){
                     var marker1 = new longdo.Marker({ lon: 100.607492 , lat: 14.069043});
                 }
                 map.Overlays.clear();
                 map.Overlays.add(marker1);
+                map.Route.search();
             }
         </script>
 
