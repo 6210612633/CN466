@@ -34,6 +34,7 @@
         <script>
             var map;
             var dest;
+            var marker1;
             var menuBarControl2 = new longdo.MenuBar({
                 /*button: [
                 { label: 'toggle', type: longdo.ButtonType.Toggle },
@@ -52,21 +53,32 @@
                 map = new longdo.Map({
                     placeholder: document.getElementById('map')
                 });
+                map.Route.mode(longdo.RouteMode.Walk);
                 map.location(longdo.LocationMode.Geolocation);
                 map.Layers.setBase(longdo.Layers.OSM); 
                 //route
-                map.Route.placeholder(document.getElementById('result'));
-                var result = map.location(); //ตำแหน่งเรา
-                map.Route.add(new longdo.Marker({ lon: result.lon,lat:result.lat}, 
-                { 
-                    title: 'ฉันอยู่ที่นี่', 
-                    detail: 'I\'m here' 
-                }
-                ));
+                //map.Route.placeholder(document.getElementById('result'));
+                //var result = map.location(); //ตำแหน่งเรา
+
+                navigator.geolocation;
+                navigator.geolocation.getCurrentPosition(gg, geo_error);
+
+                //map.Route.add(new longdo.Marker({ lon: result.lon,lat:result.lat}, 
+                
 
                 map.Ui.add(menuBarControl2);
             }
 
+            function gg(position) {
+                marker1 = new longdo.Marker({ lon: position.coords.longitude,lat: position.coords.latitude},   
+                { 
+                    title: 'ฉันอยู่ที่นี่', 
+                    detail: 'I\'m here' 
+                }
+                )
+                map.Route.add(marker1);     
+            }
+            
             function menuChange(item) {
                 //var options = {dest : 1};
                 if(item.value==1){       
@@ -74,25 +86,28 @@
                 }
                 else if (item.value==2){
                     dest = 2   
-                }
-                navigator.geolocation;
-                navigator.geolocation.getCurrentPosition(show_route, geo_error);
+                }                
+                show_route()
             }
             
             function geo_error(err){
                 console.log("gps does not support");
             }
-            function show_route(position,options){
-                var marker1 = new longdo.Marker({ lon: 100.603252, lat: 14.064884});
-                console.log("longg " + position.coords.longitude + "  & " + "lati " + position.coords.latitude );
+            function show_route(){
+                map.Overlays.clear();
+                map.Route.clear();
+                //var marker1 = new longdo.Marker({ lon: 100.603252, lat: 14.064884});
+                //console.log("longg " + position.coords.longitude + "  & " + "lati " + position.coords.latitude );
+                map.Route.add(marker1); 
                 if(dest==1){                    
+                    console.log("a1 " );
                     map.Route.add({ lon: 100.605927, lat: 14.068910 }); // ตำแหน่งที่จะไป
                 }
                 else if (dest==2){
+                    console.log("a2 " );
                     map.Route.add({ lon: 100.607492, lat: 14.069043 });
                 }
-                map.Overlays.clear();
-                map.Overlays.add(marker1);
+                //map.Overlays.add(marker1);
                 // ใส่ clearroute เก่า
                 map.Route.search();
             }
